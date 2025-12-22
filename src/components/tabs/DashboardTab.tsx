@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { GamificationHeader } from '@/components/GamificationHeader';
 import { SmartPlan } from '@/components/SmartPlan';
-import { SalaryPreview } from '@/components/SalaryPreview';
 
 export const DashboardTab = () => {
   return (
@@ -20,7 +19,6 @@ export const DashboardTab = () => {
         coins={1250}
       />
       <SmartPlan />
-      <SalaryPreview />
     </motion.div>
   );
 };

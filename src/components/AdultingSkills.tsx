@@ -1,80 +1,117 @@
-import { motion } from 'framer-motion';
-import { Receipt, Shirt, Home, CreditCard, Car, Utensils } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { Briefcase, Key, Shirt, X } from 'lucide-react';
 import { useConfetti } from '@/hooks/useConfetti';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 const skills = [
   {
-    icon: Receipt,
-    title: 'Steuern erklärt in 3 min',
+    icon: Briefcase,
+    title: '💰 Steuern in 3 min',
     category: 'Finanzen',
     gradient: 'from-neon-green to-secondary',
+    tip: 'Tipp des Tages: Behalte alle Belege für Schulmaterial – das kannst du später als Werbungskosten absetzen! Auch Fahrtkosten zur Schule zählen dazu.',
+    emoji: '💰',
+  },
+  {
+    icon: Key,
+    title: '🏠 Erste Wohnung checken',
+    category: 'Wohnen',
+    gradient: 'from-warning to-neon-orange',
+    tip: 'Tipp des Tages: Mach bei der Wohnungsübergabe IMMER Fotos von allem! Jeder Kratzer, jede Delle. Das schützt dich vor unfairen Kosten beim Auszug.',
+    emoji: '🏠',
   },
   {
     icon: Shirt,
-    title: 'Wäsche sortieren (ohne Verfärben)',
+    title: '👕 Wäsche waschen ohne Panik',
     category: 'Haushalt',
     gradient: 'from-neon-pink to-primary',
-  },
-  {
-    icon: Home,
-    title: 'Erste Wohnung budgetieren',
-    category: 'Wohnen',
-    gradient: 'from-warning to-neon-orange',
-  },
-  {
-    icon: CreditCard,
-    title: 'Konto eröffnen - so geht\'s',
-    category: 'Finanzen',
-    gradient: 'from-primary to-neon-cyan',
-  },
-  {
-    icon: Car,
-    title: 'Führerschein-Kosten planen',
-    category: 'Mobilität',
-    gradient: 'from-secondary to-neon-green',
-  },
-  {
-    icon: Utensils,
-    title: 'Meal Prep für Anfänger',
-    category: 'Ernährung',
-    gradient: 'from-neon-orange to-neon-pink',
+    tip: 'Tipp des Tages: Drehe dunkle Kleidung auf links und wasche sie bei max. 30°C – so bleiben die Farben länger frisch!',
+    emoji: '👕',
   },
 ];
 
 export const AdultingSkills = () => {
   const { triggerSmallConfetti } = useConfetti();
+  const [selectedSkill, setSelectedSkill] = useState<typeof skills[0] | null>(null);
+
+  const handleCardClick = (skill: typeof skills[0], e: React.MouseEvent) => {
+    triggerSmallConfetti(e.clientX, e.clientY);
+    setSelectedSkill(skill);
+  };
 
   return (
     <div className="mt-6">
       <h2 className="font-display text-xl mb-4 flex items-center gap-2">
         <span className="text-2xl">🎓</span>
-        Adulting 101
+        Adulting 101 & Finance
       </h2>
 
-      <div className="grid grid-cols-2 gap-3">
-        {skills.map((skill, index) => {
-          const Icon = skill.icon;
-          return (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={(e) => triggerSmallConfetti(e.clientX, e.clientY)}
-              className="cyber-card p-4 cursor-pointer group"
-            >
-              <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${skill.gradient} 
-                flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                <Icon className="w-5 h-5 text-background" />
-              </div>
-              <h3 className="font-medium text-sm leading-tight mb-1">{skill.title}</h3>
-              <span className="text-xs text-muted-foreground">{skill.category}</span>
-            </motion.div>
-          );
-        })}
+      {/* Horizontal Scroll Container - TikTok Style */}
+      <div className="overflow-x-auto scrollbar-cyber pb-4 -mx-4 px-4">
+        <div className="flex gap-4" style={{ width: 'max-content' }}>
+          {skills.map((skill, index) => {
+            const Icon = skill.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.15 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={(e) => handleCardClick(skill, e)}
+                className="cyber-card p-5 cursor-pointer group min-w-[200px] w-[200px] flex-shrink-0"
+              >
+                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${skill.gradient} 
+                  flex items-center justify-center mb-4 group-hover:scale-110 transition-transform
+                  shadow-lg`}>
+                  <Icon className="w-7 h-7 text-background" />
+                </div>
+                <h3 className="font-semibold text-base leading-tight mb-2">{skill.title}</h3>
+                <span className="text-xs text-muted-foreground">{skill.category}</span>
+                
+                <motion.div 
+                  className="mt-3 text-xs text-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity"
+                  initial={false}
+                >
+                  Tippe für Tipp →
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Modal for Tip */}
+      <Dialog open={!!selectedSkill} onOpenChange={() => setSelectedSkill(null)}>
+        <DialogContent className="cyber-card border-primary/30 max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 text-xl">
+              <span className="text-3xl">{selectedSkill?.emoji}</span>
+              {selectedSkill?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription className="text-foreground/80 text-base leading-relaxed pt-2">
+            {selectedSkill?.tip}
+          </DialogDescription>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="mt-4 p-3 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/30"
+          >
+            <p className="text-sm text-neon-green font-medium">
+              ✨ +10 XP für's Lesen!
+            </p>
+          </motion.div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
