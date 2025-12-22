@@ -16,7 +16,7 @@ const skills = [
     title: '💰 Steuern in 3 min',
     category: 'Finanzen',
     gradient: 'from-neon-green to-secondary',
-    tip: 'Tipp des Tages: Behalte alle Belege für Schulmaterial – das kannst du später als Werbungskosten absetzen! Auch Fahrtkosten zur Schule zählen dazu.',
+    tip: 'Tipp: Als Schüler bekommst du oft Lohnsteuer zurück! Heb alle Quittungen auf.',
     emoji: '💰',
   },
   {
@@ -24,7 +24,7 @@ const skills = [
     title: '🏠 Erste Wohnung checken',
     category: 'Wohnen',
     gradient: 'from-warning to-neon-orange',
-    tip: 'Tipp des Tages: Mach bei der Wohnungsübergabe IMMER Fotos von allem! Jeder Kratzer, jede Delle. Das schützt dich vor unfairen Kosten beim Auszug.',
+    tip: 'Achtung: Warmmiete = Kaltmiete + Nebenkosten (Heizung, Müll).',
     emoji: '🏠',
   },
   {
@@ -32,7 +32,7 @@ const skills = [
     title: '👕 Wäsche waschen ohne Panik',
     category: 'Haushalt',
     gradient: 'from-neon-pink to-primary',
-    tip: 'Tipp des Tages: Drehe dunkle Kleidung auf links und wasche sie bei max. 30°C – so bleiben die Farben länger frisch!',
+    tip: 'Tipp: Neue Jeans immer separat waschen, die färben ab!',
     emoji: '👕',
   },
 ];
