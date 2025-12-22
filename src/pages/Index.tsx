@@ -36,10 +36,10 @@ const Index = () => {
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary 
               flex items-center justify-center neon-border">
-              <span className="text-xl">🧠</span>
+              <span className="text-xl">🦊</span>
             </div>
             <div>
-              <h1 className="font-display text-lg gradient-text">LearnFuture AI</h1>
+              <h1 className="font-display text-lg gradient-text">LearnyFox</h1>
               <p className="text-xs text-muted-foreground">Deine Zukunft beginnt hier</p>
             </div>
           </motion.div>
