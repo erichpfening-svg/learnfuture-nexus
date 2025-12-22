@@ -90,9 +90,19 @@ const getAiScenario = (userText: string): { ai: Omit<Message, 'id'>; nextChips: 
         ai: {
           role: 'ai',
           content:
-            'Ich organisiere große Events (Konzerte, Sport, Messen) – und ja: Mathe hilft bei Planung, Wegen und Sicherheit. 🎟️',
+            'Ich organisiere große Events (Konzerte, Sport, Messen) – und ja: Mathe hilft bei Planung, Wegen und Sicherheit. 🎟️ Willst du sehen, was meine Kollegen so machen?',
         },
-        nextChips: ['Zeig mir Jobs'],
+        nextChips: ['Architekt 🏠', 'Game-Dev 🎮', 'Influencer 📱'],
+      };
+
+    case 'Influencer 📱':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Als Influencer brauche ich Statistik für Analytics! Engagement-Raten, Follower-Wachstum... alles Mathe. 📊 Plus: Steuern muss ich auch können!',
+        },
+        nextChips: INITIAL_QUICK_REPLIES,
       };
 
     case 'Brauche ich Englisch?':
@@ -320,8 +330,7 @@ export const EchoAIChat = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="cyber-card p-4 flex flex-col"
-      style={{ minHeight: '450px' }}
+      className="cyber-card p-4 flex flex-col h-[500px] max-h-[500px]"
     >
       {/* Header */}
       <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border/50">
