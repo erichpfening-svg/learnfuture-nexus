@@ -18,53 +18,103 @@ const initialMessage: Message = {
   content: 'Hey! Ich bin dein Ich aus 2035. Frag mich mal, wofür wir Mathe brauchen! 🦊',
 };
 
-const quickReplies = [
-  { label: 'Wofür Parabeln?', action: 'parabeln' },
-  { label: 'Was machst du beruflich?', action: 'beruf' },
-  { label: 'Brauche ich Englisch?', action: 'englisch' },
+const INITIAL_QUICK_REPLIES = [
+  'Wofür Parabeln?',
+  'Was machst du beruflich?',
+  'Brauche ich Englisch?',
 ];
 
-const responses: Record<string, { content: string; buttons?: { label: string; action: string }[]; image?: string; voiceMemo?: { duration: string } }> = {
-  parabeln: {
-    content: 'Parabeln sind wie die Flugkurve beim Elfmeter! ⚽ Als Event-Manager nutze ich das heute für Stadion-Planung.',
-    buttons: [
-      { label: 'Mehr Jobs anzeigen', action: 'more_jobs' },
-      { label: 'Anderes Thema', action: 'reset' },
-    ],
-  },
-  beruf: {
-    content: 'Ich bin jetzt Tech-Entrepreneur! 🚀 Meine Firma entwickelt AR-Brillen für Schulen. Ohne Mathe & Englisch wäre das nie passiert!',
-    buttons: [{ label: 'Erzähl mehr!', action: 'more_jobs' }],
-  },
-  englisch: {
-    content: 'Absolut! 🌍 Letzte Woche hab ich mit Teams aus Japan, USA und Brasilien gearbeitet. Englisch ist unsere gemeinsame Sprache!',
-    buttons: [{ label: 'Cool! Was noch?', action: 'reset' }],
-  },
-  more_jobs: {
-    content: 'Klar! In welchem Bereich soll ich dir Mathe zeigen?',
-    buttons: [
-      { label: 'Architekt 🏠', action: 'architekt' },
-      { label: 'Game-Dev 🎮', action: 'gamedev' },
-      { label: 'Web-Designer 🎨', action: 'webdesigner' },
-    ],
-  },
-  reset: {
-    content: 'Klar, frag mich was du willst! Ich hab noch so viel zu erzählen aus der Zukunft... 🔮',
-  },
-  webdesigner: {
-    content: 'Als Web-Designer nutze ich Parabeln für smooth scrolling Animationen und CSS-Kurven. Das macht Websites so geschmeidig! ✨',
-    buttons: [{ label: 'Zeig mir mehr!', action: 'more_jobs' }],
-  },
-  architekt: {
-    content: 'Schau mal, an dem Wolkenkratzer arbeite ich gerade. Ohne Geometrie wäre das eingestürzt! 🏗️',
-    image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=300&fit=crop',
-    buttons: [{ label: 'Wow! Noch mehr?', action: 'more_jobs' }],
-  },
-  gamedev: {
-    content: 'Check mal diese Sprachnachricht von meinem Game-Dev Team:',
-    voiceMemo: { duration: '0:14' },
-    buttons: [{ label: 'Krass! Was noch?', action: 'more_jobs' }],
-  },
+const PLACEHOLDER_BUILDING =
+  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&h=600&fit=crop';
+
+const PLACEHOLDER_GAMEDEV =
+  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=600&fit=crop';
+
+const getAiScenario = (userText: string): { ai: Omit<Message, 'id'>; nextChips: string[] } => {
+  switch (userText) {
+    case 'Wofür Parabeln?':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Parabeln sind wie die Flugkurve beim Elfmeter! ⚽ Als Event-Manager nutze ich das heute für Stadion-Planung.',
+        },
+        nextChips: ['Zeig mir Jobs', 'Echt jetzt?'],
+      };
+
+    case 'Zeig mir Jobs':
+    case 'Mehr Jobs anzeigen':
+    case 'Mehr Jobs':
+      return {
+        ai: {
+          role: 'ai',
+          content: 'Klar! Wo soll ich Parabeln noch zeigen?',
+        },
+        nextChips: ['Game-Dev 🎮', 'Architekt 🏠'],
+      };
+
+    case 'Game-Dev 🎮':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'In Games brauchen wir Parabeln für Sprung-Animationen. Ohne Mathe fällt Mario runter! 📉',
+          image: PLACEHOLDER_GAMEDEV,
+        },
+        nextChips: INITIAL_QUICK_REPLIES,
+      };
+
+    case 'Architekt 🏠':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Schau mal, an dem Wolkenkratzer arbeite ich gerade. Ohne Geometrie wäre das eingestürzt!',
+          image: PLACEHOLDER_BUILDING,
+        },
+        nextChips: INITIAL_QUICK_REPLIES,
+      };
+
+    case 'Echt jetzt?':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Echt. Mathe versteckt sich überall – willst du ein paar Jobs sehen, wo du’s später wirklich nutzt?',
+        },
+        nextChips: ['Zeig mir Jobs'],
+      };
+
+    case 'Was machst du beruflich?':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Ich organisiere große Events (Konzerte, Sport, Messen) – und ja: Mathe hilft bei Planung, Wegen und Sicherheit. 🎟️',
+        },
+        nextChips: ['Zeig mir Jobs'],
+      };
+
+    case 'Brauche ich Englisch?':
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Ja! Englisch ist dein Cheatcode für Jobs, Reisen und Internet-Wissen – und in 2035 erst recht. 🌍',
+        },
+        nextChips: INITIAL_QUICK_REPLIES,
+      };
+
+    default:
+      return {
+        ai: {
+          role: 'ai',
+          content:
+            'Nice Frage! Tippe am besten auf einen Chip – dann kann ich dir aus 2035 ein konkretes Beispiel zeigen. 🦊',
+        },
+        nextChips: INITIAL_QUICK_REPLIES,
+      };
+  }
 };
 
 // Glitch text animation for "Connecting to 2035"
@@ -211,67 +261,59 @@ export const EchoAIChat = () => {
   const [messages, setMessages] = useState<Message[]>([initialMessage]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [availableQuickReplies, setAvailableQuickReplies] = useState(quickReplies);
+  const [availableQuickReplies, setAvailableQuickReplies] = useState<string[]>(INITIAL_QUICK_REPLIES);
   const { triggerSmallConfetti } = useConfetti();
 
   const addMessage = (message: Message) => {
     setMessages((prev) => [...prev, message]);
   };
 
-  const handleAction = (action: string, label: string) => {
-    // Add user message
+  const handleQuickReply = (text: string) => {
     addMessage({
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
       role: 'user',
-      content: label,
+      content: text,
     });
+
     setAvailableQuickReplies([]);
-    
-    // Show connecting indicator
     setIsTyping(true);
-    
-    // Simulate AI response after delay
+
     setTimeout(() => {
+      const { ai, nextChips } = getAiScenario(text);
+
       setIsTyping(false);
-      const response = responses[action];
-      if (response) {
-        addMessage({
-          id: (Date.now() + 1).toString(),
-          role: 'ai',
-          content: response.content,
-          buttons: response.buttons,
-          image: response.image,
-          voiceMemo: response.voiceMemo,
-        });
-        
-        // Reset quick replies if action is 'reset'
-        if (action === 'reset') {
-          setAvailableQuickReplies(quickReplies);
-        }
-      }
-    }, 1500);
+      addMessage({
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        ...ai,
+      });
+      setAvailableQuickReplies(nextChips);
+    }, 1000);
   };
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
-    
+
+    const text = inputValue.trim();
     addMessage({
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
       role: 'user',
-      content: inputValue,
+      content: text,
     });
     setInputValue('');
+
     setIsTyping(true);
-    
+    setAvailableQuickReplies([]);
+
     setTimeout(() => {
+      const { ai, nextChips } = getAiScenario(text);
+
       setIsTyping(false);
       addMessage({
-        id: (Date.now() + 1).toString(),
-        role: 'ai',
-        content: 'Interessante Frage! 🤔 Probier mal die Quick-Replies, da hab ich richtig coole Antworten für dich!',
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        ...ai,
       });
-      setAvailableQuickReplies(quickReplies);
-    }, 1500);
+      setAvailableQuickReplies(nextChips);
+    }, 1000);
   };
 
   return (
@@ -364,7 +406,8 @@ export const EchoAIChat = () => {
                   >
                     {message.buttons.map((button, idx) => (
                       <motion.button
-                        key={button.action}
+                        key={button.label}
+                        type="button"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.4 + idx * 0.1 }}
@@ -372,9 +415,9 @@ export const EchoAIChat = () => {
                         whileTap={{ scale: 0.95 }}
                         onClick={(e) => {
                           triggerSmallConfetti(e.clientX, e.clientY);
-                          handleAction(button.action, button.label);
+                          handleQuickReply(button.label);
                         }}
-                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-primary/30 to-secondary/30 
+                        className="cursor-pointer pointer-events-auto px-4 py-2 rounded-xl bg-gradient-to-r from-primary/30 to-secondary/30 
                           border border-primary/50 text-sm font-medium hover:from-primary/50 hover:to-secondary/50 
                           transition-all hover:border-primary shadow-sm"
                       >
@@ -411,7 +454,8 @@ export const EchoAIChat = () => {
           >
             {availableQuickReplies.map((reply, idx) => (
               <motion.button
-                key={reply.action}
+                key={reply}
+                type="button"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.1 }}
@@ -419,13 +463,13 @@ export const EchoAIChat = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => {
                   triggerSmallConfetti(e.clientX, e.clientY);
-                  handleAction(reply.action, reply.label);
+                  handleQuickReply(reply);
                 }}
-                className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 
+                className="cursor-pointer pointer-events-auto px-4 py-2 rounded-full bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 
                   border border-neon-cyan/50 text-sm font-medium hover:from-neon-cyan/40 hover:to-neon-pink/40 
                   transition-all text-foreground hover:border-neon-cyan shadow-sm"
               >
-                {reply.label}
+                {reply}
               </motion.button>
             ))}
           </motion.div>
